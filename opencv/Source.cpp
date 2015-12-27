@@ -6,6 +6,7 @@ using namespace std;
 /**/
 string cube = "logo.png";
 string src = "raw.jpg";
+//string light = "light.png";
 /**********************************************************************
  *    ncnxj5														  *
  *    2015/12														  *
@@ -21,13 +22,17 @@ int main()
 	IplImage *Image_SOURCE;
 	IplImage *Image_RESULT;
 	IplImage *Image_OUT;
+	IplImage *Image_LIGHTIN;
+	IplImage *Image_LIGHT;
 
 	CvScalar sR_CUBE;
 	CvScalar sR_SOURCE;
+	CvScalar sR_LIGHT;
 	int x, y;
 	
 	Image_CUBE = cvLoadImage((cube).c_str(), 1);		//Load the pic matrix
 	Image_SOURCE = cvLoadImage((file).c_str(), 1);		//Load the pic matrix
+	//Image_LIGHTIN = cvLoadImage((light).c_str(), 1);
 	if(!Image_SOURCE)	{
 		Image_SOURCE = cvLoadImage((src).c_str(), 1);   //Load the pic matrix
 		cout << "cannot open file:" + file<<endl;
@@ -50,6 +55,8 @@ int main()
 
 	Image_RESULT = cvCreateImage(czSize, Image_SOURCE->depth, Image_SOURCE->nChannels);
 	cvResize(Image_SOURCE, Image_RESULT, CV_INTER_AREA);
+	//Image_LIGHT= cvCreateImage(czSize, Image_SOURCE->depth, Image_SOURCE->nChannels);
+	//cvResize(Image_LIGHTIN, Image_LIGHT, CV_INTER_AREA);
 
 	height = Image_RESULT->height;
 	width = Image_RESULT->width;
@@ -101,11 +108,12 @@ int main()
 		for (int j = 0;j < width;j++)
 		{
 			//cout << i << " " << j << endl;
+			//sR_LIGHT= cvGet2D(Image_LIGHT, i, j);
 			sR_SOURCE = cvGet2D(Image_RESULT, i, j);
 			sR_CUBE = cvGet2D(Image_CUBE, i%height_c, j%width_c);
-			sR_SOURCE.val[0] += sR_CUBE.val[0];
-			sR_SOURCE.val[1] += sR_CUBE.val[1];
-			sR_SOURCE.val[2] += sR_CUBE.val[2];
+			sR_SOURCE.val[0] += sR_CUBE.val[0];//+ sR_LIGHT.val[0];
+			sR_SOURCE.val[1] += sR_CUBE.val[1];// +sR_LIGHT.val[1];
+			sR_SOURCE.val[2] += sR_CUBE.val[2];// +sR_LIGHT.val[2];
 			cvSet2D(Image_RESULT, i, j, sR_SOURCE);
 		}
 
